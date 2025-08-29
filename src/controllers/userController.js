@@ -1,6 +1,6 @@
-const userModel = require("../models/userModel");
+const userModel = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
-const { EncodeToken } = require("../utility/tokenHelper");
+const { EncodeToken } = require("../utility/tokenHelper.js");
 
 // Register User
 exports.register = async (req, res) => {
@@ -96,7 +96,7 @@ exports.logout = (req, res) => {
   res.status(200).json({ success: true, message: "Logout successful" });
 };
 
-// Upload File (requires multer setup)
+// Upload File
 exports.upload = async (req, res) => {
   try {
     res.status(200).json({ success: true, message: "File uploaded", file: req.file });

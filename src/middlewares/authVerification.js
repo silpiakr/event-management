@@ -1,18 +1,16 @@
-const { decodeToken } = require("../utility/tokenHelper");
+const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
-  let token = req.cookies["token"];
+const isAuthenticated = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ success: false, message: "No token provided" });
 
-  let decoded = decodeToken(token);
-
-  if (decoded === null) {
-    return res.status(401).json({
-      status: false,
-      message: "Invalid token.",
-    });
-  } else {
-    req.headers.email = decoded.email;
-    req.headers._id = decoded._id;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     next();
+  } catch (error) {
+    res.status(401).json({ success: false, message: "Invalid token" });
   }
 };
+
+module.exports = { isAuthenticated };
